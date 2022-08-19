@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
+import { LoginLocalDto } from './dto/loginLocal.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @UseGuards(AuthGuard('local'))
+  @Post('login')
+  async login(@Body() loginLocalDto: LoginLocalDto) {
+    return 'Login Successful!';
   }
 }
