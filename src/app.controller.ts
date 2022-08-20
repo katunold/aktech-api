@@ -2,14 +2,19 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { LoginLocalDto } from './dto/loginLocal.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { LocalAuthGuard } from './auth/guard/local-auth.guard';
+import { AuthService } from './auth/service/auth.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private authService: AuthService,
+  ) {}
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Body() loginLocalDto: LoginLocalDto) {
-    return 'Login Successful!';
+    return this.authService.login(loginLocalDto);
   }
 }
