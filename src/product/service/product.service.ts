@@ -14,11 +14,10 @@ export class ProductService {
   async createProduct(
     productData: CreateProductDto[],
   ): Promise<CreateProductDto[]> {
-    const data = this.productRepository.create(productData);
-    await this.productRepository.save(data).catch((error) => {
+    await this.productRepository.save(productData).catch((error) => {
       throw error;
     });
 
-    return data;
+    return productData;
   }
 }
