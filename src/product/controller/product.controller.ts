@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   Post,
   Req,
@@ -10,6 +11,7 @@ import {
 import { ProductService } from '../service/product.service';
 import { CreateProductDto } from '../../dto/createProduct.dto';
 import { JwtAuthGuard } from '../../auth/guard/jwtAuth/jwt-auth.guard';
+import { GetProductListDto } from '../../dto/getProductList.dto';
 
 @Controller('product')
 export class ProductController {
@@ -33,6 +35,18 @@ export class ProductController {
           'Product name already exists, Select a different name',
         );
       }
+      throw new InternalServerErrorException(
+        'Sorry something went wrong on our end 😒',
+      );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('list')
+  async listAllProducts(): Promise<GetProductListDto[]> {
+    try {
+      return await this.productService.getProductList();
+    } catch (error) {
       throw new InternalServerErrorException(
         'Sorry something went wrong on our end 😒',
       );
