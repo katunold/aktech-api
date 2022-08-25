@@ -3,11 +3,11 @@ import {
   Body,
   Controller,
   Get,
-  InternalServerErrorException,
+  InternalServerErrorException, Param,
   Post,
   Req,
-  UseGuards,
-} from '@nestjs/common';
+  UseGuards
+} from "@nestjs/common";
 import { ProductService } from '../service/product.service';
 import { CreateProductDto } from '../../dto/createProduct.dto';
 import { JwtAuthGuard } from '../../auth/guard/jwtAuth/jwt-auth.guard';
@@ -46,6 +46,19 @@ export class ProductController {
   async listAllProducts(): Promise<GetProductListDto[]> {
     try {
       return await this.productService.getProductList();
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Sorry something went wrong on our end 😒',
+      );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async getProduct(@Param() params): Promise<any> {
+    try {
+      const { id } = params;
+      return await this.productService.getProductDetails(id);
     } catch (error) {
       throw new InternalServerErrorException(
         'Sorry something went wrong on our end 😒',

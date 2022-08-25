@@ -29,9 +29,31 @@ export class ProductService {
           'id',
           'productName',
           'pricePerUnit',
-          'availableStoke',
+          'productStatus',
           'createdAt',
           'updatedAt',
+        ],
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  async getProductDetails(id): Promise<any> {
+    return await this.productRepository
+      .find({
+        where: { id },
+        select: [
+          'id',
+          'productName',
+          'availableStoke',
+          'pricePerUnit',
+          'productStatus',
+          'notes',
+          'createdAt',
+          'createdBy',
+          'updatedAt',
+          'updatedBy',
         ],
       })
       .catch((error) => {
