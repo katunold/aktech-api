@@ -3,15 +3,19 @@ import {
   Body,
   Controller,
   Get,
-  InternalServerErrorException, Param,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
   Post,
+  Put,
   Req,
-  UseGuards
-} from "@nestjs/common";
+  UseGuards,
+} from '@nestjs/common';
 import { ProductService } from '../service/product.service';
 import { CreateProductDto } from '../../dto/createProduct.dto';
 import { JwtAuthGuard } from '../../auth/guard/jwtAuth/jwt-auth.guard';
 import { GetProductListDto } from '../../dto/getProductList.dto';
+import { UpdateProductDto } from '../../dto/updateProduct.dto';
 
 @Controller('product')
 export class ProductController {
@@ -38,6 +42,40 @@ export class ProductController {
       throw new InternalServerErrorException(
         'Sorry something went wrong on our end 😒',
       );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('update/:id')
+  async updateProduct(
+    @Req() req: any,
+    @Body() updateProductDto: UpdateProductDto,
+  ): Promise<any> {
+    const { user, params } = req;
+    updateProductDto['updatedBy'] = user.userId;
+
+    try {
+      const updatedProductData = await this.productService.updateProduct(
+        params.id,
+        updateProductDto,
+      );
+      if (updatedProductData.raw.length) {
+        return updatedProductData.raw[0];
+      } else {
+        throw 'Product not found';
+      }
+    } catch (error) {
+      if (error === 'Product not found') {
+        throw new NotFoundException(`Product with id ${params.id} not found`);
+      } else if (error.code == 23505) {
+        throw new BadRequestException(
+          `Product with the name ${updateProductDto.productName} already exists, please use a unique product name`,
+        );
+      } else {
+        throw new InternalServerErrorException(
+          'Sorry something went wrong on our end 😒',
+        );
+      }
     }
   }
 

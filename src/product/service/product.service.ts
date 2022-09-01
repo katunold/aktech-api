@@ -22,6 +22,23 @@ export class ProductService {
     return productData;
   }
 
+  async updateProduct(
+    productId: number,
+    updatedProductData: any,
+  ): Promise<any> {
+    return await this.productRepository
+      .createQueryBuilder()
+      .update(updatedProductData)
+      .where({
+        id: productId,
+      })
+      .returning('*')
+      .execute()
+      .catch((error) => {
+        throw error;
+      });
+  }
+
   async getProductList(): Promise<GetProductListDto[]> {
     return await this.productRepository
       .find({
