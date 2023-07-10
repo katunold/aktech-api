@@ -11,11 +11,12 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ProductService } from '../service/product.service';
-import { CreateProductDto } from '../../dto/createProduct.dto';
-import { JwtAuthGuard } from '../../auth/guard/jwtAuth/jwt-auth.guard';
-import { GetProductListDto } from '../../dto/getProductList.dto';
-import { UpdateProductDto } from '../../dto/updateProduct.dto';
+import { ProductService } from '../../services/product/product.service';
+import { ProductDto } from '../../../dto/productDto';
+import { JwtAuthGuard } from '../../../auth/guard/jwtAuth/jwt-auth.guard';
+import { GetProductListDto } from '../../../dto/getProductList.dto';
+import { UpdateProductDto } from '../../../dto/updateProduct.dto';
+import { CreateProductDto } from '../../../dto/createProduct.dto';
 
 @Controller('product')
 export class ProductController {
@@ -25,14 +26,18 @@ export class ProductController {
   @Post('create')
   async createProduct(
     @Req() req: any,
-    @Body() createProductDto: CreateProductDto[],
-  ): Promise<CreateProductDto[]> {
+    @Body() createProductDto: CreateProductDto,
+  ): Promise<ProductDto[]> {
     try {
-      createProductDto = createProductDto.map(
-        (product) => (product = { ...product, createdBy: req.user.userId }),
+      const products: ProductDto[] = createProductDto.products.map(
+        (product) => ({
+          ...product,
+          stockId: createProductDto.stokeId,
+          createdBy: req.user.userId,
+        }),
       );
 
-      return await this.productService.createProduct(createProductDto);
+      return await this.productService.createProduct(products);
     } catch (error) {
       if (error.detail.includes('already exists.')) {
         throw new BadRequestException(
@@ -61,9 +66,8 @@ export class ProductController {
       );
       if (updatedProductData.raw.length) {
         return updatedProductData.raw[0];
-      } else {
-        throw 'Product not found';
       }
+      throw 'Product not found';
     } catch (error) {
       if (error === 'Product not found') {
         throw new NotFoundException(`Product with id ${params.id} not found`);

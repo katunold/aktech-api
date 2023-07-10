@@ -5,14 +5,14 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { ProductModule } from './product/product.module';
+import { ProductStockModule } from './product-stock/product-stock.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: 5432,
+      port: 32768,
       username: 'postgres',
       password: 'pwd',
       database: 'aktech-db',
@@ -25,7 +25,7 @@ import { ProductModule } from './product/product.module';
     ConfigModule.forRoot({ isGlobal: true }),
     UserModule,
     AuthModule,
-    ProductModule,
+    ProductStockModule,
   ],
   controllers: [AppController],
   providers: [AppService],
