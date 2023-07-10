@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
+import { StockEntity } from './stock.entity';
 
 export enum ProductStatus {
   AVAILABLE = 'available',
@@ -37,6 +38,9 @@ export class ProductEntity {
 
   @Column({ type: 'text' })
   notes: string;
+
+  @ManyToOne(() => StockEntity, (stock) => stock.id)
+  stock: number;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   createdBy: number;

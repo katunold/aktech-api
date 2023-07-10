@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ProductEntity } from '../../entities/product.entity';
+import { ProductEntity } from '../../../entities/product.entity';
 import { Repository } from 'typeorm';
-import { CreateProductDto } from '../../dto/createProduct.dto';
-import { GetProductListDto } from '../../dto/getProductList.dto';
+import { ProductDto } from '../../../dto/productDto';
+import { GetProductListDto } from '../../../dto/getProductList.dto';
 
 @Injectable()
 export class ProductService {
@@ -13,8 +13,8 @@ export class ProductService {
   ) {}
 
   async createProduct(
-    productData: CreateProductDto[],
-  ): Promise<CreateProductDto[]> {
+    productData: ProductDto[],
+  ): Promise<ProductDto[]> {
     await this.productRepository.save(productData).catch((error) => {
       throw error;
     });
