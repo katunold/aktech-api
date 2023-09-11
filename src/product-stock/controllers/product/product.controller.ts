@@ -32,7 +32,7 @@ export class ProductController {
       const products: ProductDto[] = createProductDto.products.map(
         (product) => ({
           ...product,
-          stockId: createProductDto.stokeId,
+          stock: createProductDto.stokeId,
           createdBy: req.user.userId,
         }),
       );

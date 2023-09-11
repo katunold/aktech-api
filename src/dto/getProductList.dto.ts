@@ -3,6 +3,7 @@ export class GetProductListDto {
   productName: string;
   pricePerUnit: number;
   availableStoke: number;
+  stock: number;
   createdAt: string;
   updatedAt: string;
 }
