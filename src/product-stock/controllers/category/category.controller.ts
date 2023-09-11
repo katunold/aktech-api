@@ -3,7 +3,9 @@ import {
   Body,
   Controller,
   InternalServerErrorException,
+  NotFoundException,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -33,6 +35,36 @@ export class CategoryController {
       throw new InternalServerErrorException(
         'Sorry something went wrong on our end 😒',
       );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('update/:id')
+  async updateCategory(
+    @Req() req: any,
+    @Body() updateCategoryDto: { categoryName: string },
+  ): Promise<any> {
+    const { user, params } = req;
+    updateCategoryDto['updatedBy'] = user.userId;
+    try {
+      const updatedCategoryData = await this.categoryService.updateCategory(
+        params.id,
+        updateCategoryDto,
+      );
+      if (updatedCategoryData.raw.length) {
+        return updatedCategoryData.raw[0];
+      }
+      throw 'Category not found';
+    } catch (error) {
+      if (error === 'Category not found') {
+        throw new NotFoundException(`Category with id ${params.id} not found`);
+      } else if (error.code == 23505) {
+        throw new BadRequestException('Category name already exists');
+      } else {
+        throw new InternalServerErrorException(
+          'Sorry something went wrong on our end 😒',
+        );
+      }
     }
   }
 }
