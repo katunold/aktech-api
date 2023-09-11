@@ -12,14 +12,10 @@ export class ProductService {
     private productRepository: Repository<ProductEntity>,
   ) {}
 
-  async createProduct(
-    productData: ProductDto[],
-  ): Promise<ProductDto[]> {
-    await this.productRepository.save(productData).catch((error) => {
+  async createProduct(productData: ProductDto[]): Promise<ProductDto[]> {
+    return await this.productRepository.save(productData).catch((error) => {
       throw error;
     });
-
-    return productData;
   }
 
   async updateProduct(
@@ -46,6 +42,7 @@ export class ProductService {
           'id',
           'productName',
           'pricePerUnit',
+          'stock',
           'productStatus',
           'createdAt',
           'updatedAt',

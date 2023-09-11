@@ -4,6 +4,7 @@ export class ProductDto {
   @IsNotEmpty()
   productName: string;
   notes: string;
-  stockId: number;
+  @IsNotEmpty()
+  stock: number;
   createdBy?: number;
 }
