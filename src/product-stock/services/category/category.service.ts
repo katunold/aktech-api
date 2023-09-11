@@ -18,4 +18,21 @@ export class CategoryService {
       throw error;
     });
   }
+
+  async updateCategory(
+    categoryId: number,
+    updatedCategoryData: any,
+  ): Promise<any> {
+    return await this.categoryRepository
+      .createQueryBuilder()
+      .update(updatedCategoryData)
+      .where({
+        id: categoryId,
+      })
+      .returning('*')
+      .execute()
+      .catch((error) => {
+        throw error;
+      });
+  }
 }
