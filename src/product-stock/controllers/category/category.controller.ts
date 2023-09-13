@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   NotFoundException,
   Post,
@@ -12,6 +13,7 @@ import {
 import { CategoryService } from '../../services/category/category.service';
 import { JwtAuthGuard } from '../../../auth/guard/jwtAuth/jwt-auth.guard';
 import { CreateCategoryDto } from '../../../dto/createCategory.dto';
+import { CategoryEntity } from '../../../entities/category.entity';
 
 @Controller('category')
 export class CategoryController {
@@ -65,6 +67,18 @@ export class CategoryController {
           'Sorry something went wrong on our end 😒',
         );
       }
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('list')
+  async getCategoryList(): Promise<any[]> {
+    try {
+      return await this.categoryService.getCategoryList();
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Sorry something went wrong on our end 😒',
+      );
     }
   }
 }

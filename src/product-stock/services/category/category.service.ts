@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryEntity } from '../../../entities/category.entity';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from '../../../dto/createCategory.dto';
+import { GetCategoryDto } from '../../../dto/getCategory.dto';
 
 @Injectable()
 export class CategoryService {
@@ -34,5 +35,19 @@ export class CategoryService {
       .catch((error) => {
         throw error;
       });
+  }
+
+  async getCategoryList(): Promise<any[]> {
+    return await this.categoryRepository.find({
+      select: [
+        'id',
+        'categoryName',
+        'createdBy',
+        'updatedBy',
+        'createdAt',
+        'updatedAt',
+        'deletedAt',
+      ],
+    });
   }
 }
