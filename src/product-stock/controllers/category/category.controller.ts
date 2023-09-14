@@ -2,9 +2,11 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
+  Param,
   Post,
   Put,
   Req,
@@ -76,6 +78,26 @@ export class CategoryController {
     try {
       return await this.categoryService.getCategoryList();
     } catch (error) {
+      throw new InternalServerErrorException(
+        'Sorry something went wrong on our end 😒',
+      );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteCategory(@Param() params): Promise<any> {
+    const { id } = params;
+    try {
+      const result = await this.categoryService.deleteCategory(id);
+      if (result.affected) {
+        return { message: `Category with ID ${id} has been deleted` };
+      }
+      throw `not found`;
+    } catch (error) {
+      if (error === 'not found') {
+        throw new NotFoundException(`Category with ID ${id} not found`);
+      }
       throw new InternalServerErrorException(
         'Sorry something went wrong on our end 😒',
       );
