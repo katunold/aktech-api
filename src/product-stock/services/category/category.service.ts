@@ -50,4 +50,8 @@ export class CategoryService {
       ],
     });
   }
+
+  async deleteCategory(id: number): Promise<any> {
+    return await this.categoryRepository.softDelete({ id });
+  }
 }
