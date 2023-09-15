@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryEntity } from '../../../entities/category.entity';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from '../../../dto/createCategory.dto';
-import { GetCategoryDto } from '../../../dto/getCategory.dto';
 
 @Injectable()
 export class CategoryService {
