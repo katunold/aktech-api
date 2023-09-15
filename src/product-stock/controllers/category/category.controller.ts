@@ -15,7 +15,6 @@ import {
 import { CategoryService } from '../../services/category/category.service';
 import { JwtAuthGuard } from '../../../auth/guard/jwtAuth/jwt-auth.guard';
 import { CreateCategoryDto } from '../../../dto/createCategory.dto';
-import { CategoryEntity } from '../../../entities/category.entity';
 
 @Controller('category')
 export class CategoryController {
