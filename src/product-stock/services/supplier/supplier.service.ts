@@ -16,4 +16,14 @@ export class SupplierService {
       throw error;
     });
   }
+
+  async getSupplierList(): Promise<SupplierEntity[]> {
+    return await this.supplierRepository
+      .find({
+        select: ['id', 'supplierName', 'email', 'phone'],
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
 }
