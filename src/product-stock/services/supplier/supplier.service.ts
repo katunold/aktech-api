@@ -17,6 +17,24 @@ export class SupplierService {
     });
   }
 
+  async updateSupplier(
+    supplierId: number,
+    updatedSupplierData: any,
+  ): Promise<any> {
+    console.log('>>>>>>>>>>>', updatedSupplierData);
+    return await this.supplierRepository
+      .createQueryBuilder()
+      .update(updatedSupplierData)
+      .where({
+        id: supplierId,
+      })
+      .returning('*')
+      .execute()
+      .catch((error) => {
+        throw error;
+      });
+  }
+
   async getSupplierList(): Promise<SupplierEntity[]> {
     return await this.supplierRepository
       .find({
