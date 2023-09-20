@@ -2,13 +2,16 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
-  InternalServerErrorException, NotFoundException,
+  InternalServerErrorException,
+  NotFoundException,
+  Param,
   Post,
   Put,
   Req,
-  UseGuards
-} from "@nestjs/common";
+  UseGuards,
+} from '@nestjs/common';
 import { SupplierService } from '../../services/supplier/supplier.service';
 import { JwtAuthGuard } from '../../../auth/guard/jwtAuth/jwt-auth.guard';
 import { SupplierDto } from '../../../dto/supplier.dto';
@@ -80,6 +83,20 @@ export class SupplierController {
       return await this.supplierService.getSupplierList();
     } catch (error) {
       console.log(error);
+      throw new InternalServerErrorException(
+        'Sorry something went wrong on our end 😒',
+      );
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteSupplier(@Param() params): Promise<any> {
+    try {
+      const { id } = params;
+      await this.supplierService.deleteSupplier(id);
+      return { message: `Supplier with supplier ID ${id} has been deleted` };
+    } catch (error) {
       throw new InternalServerErrorException(
         'Sorry something went wrong on our end 😒',
       );

@@ -37,7 +37,6 @@ export class StockController {
       await this.stockService.deleteStock(id);
       return { message: `Stock with stock ID ${id} has been deleted` };
     } catch (error) {
-      console.log('>>>>>>>>>>>>>>>>', error);
       throw new InternalServerErrorException(
         'Sorry something went wrong on our end 😒',
       );
